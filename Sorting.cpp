@@ -1,42 +1,41 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
+#include<bits/stdc++.h>
+using namespace std;
 
 int tc;
 FILE *fp;
 time_t start, end;
 
+void print_array(int a[], int n)
+{
+    for(int i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+}
+
 void copy_array(int src[], int tar[], int n)
 {
-    int i;
     for(int i = 0; i < n; i++)
         tar[i] = src[i];
 }
 
 void fill_array(int a[], int n)
 {
-    int i;
-    for(i = 0; i < n; i++)
+    for(int i = 0; i < n; i++)
         a[i] = (rand() % 100000) + 1;
 }
 
 void bubble_sort(int a[], int n)
 {
-    int i, j, temp;
-    for(i = 0; i < n - 1; i++)
-        for(j = 0; j < n - 1 - i; j++)
+    for(int i = 0; i < n - 1; i++)
+        for(int j = 0; j < n - 1 - i; j++)
             if(a[j] > a[j+1])
-            {
-                temp = a[j];
-                a[j] = a[j+1];
-                a[j+1] = temp;
-            }
+                swap(a[j], a[j+1]);
 }
 
 void insertion_sort(int a[], int n)
 {
-   int i, j, key;
-   for (i = 1; i < n; i++)
+   int j, key;
+   for (int i = 1; i < n; i++)
    {
        key = a[i];
        j = i - 1;
@@ -50,16 +49,14 @@ void insertion_sort(int a[], int n)
 
 void selection_sort(int a[], int n)
 {
-    int i, j, min_idx, temp;
-    for (i = 0; i < n-1; i++)
+    int min_idx, temp;
+    for (int i = 0; i < n-1; i++)
     {
         min_idx = i;
-        for (j = i + 1; j < n; j++)
+        for (int j = i + 1; j < n; j++)
           if (a[j] < a[min_idx])
             min_idx = j;
-        temp = a[min_idx];
-        a[min_idx] = a[i];
-        a[i] = temp;
+        swap(a[i], a[min_idx]);
     }
 }
 
@@ -77,6 +74,7 @@ void run(int n)
     end = clock();
     tc = difftime(end, start);
     fprintf(fp, " %dms\t\t", tc);
+    print_array(a, n);
 
     int b[n];
     copy_array(arr, b, n);
@@ -97,9 +95,7 @@ void run(int n)
 
 int main()
 {
-
     fp = fopen("Output.txt", "w");
-    
     if(fp == NULL) {
         printf("Error");
         exit(0);
@@ -107,12 +103,12 @@ int main()
 
     fprintf(fp, "Size of the input\tBubble Sort\t Insertion Sort\t Selection Sort\n");
 
-    run(100);
-    run(1000);
-    run(10000);
+    run(5);
+    run(10);
+    run(15);
 
     fclose(fp);
-    
+
     return 0;
 
 }
