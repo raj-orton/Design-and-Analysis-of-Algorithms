@@ -4,6 +4,7 @@ Insertion sort
 Selection sort
 Merge sort
 Quick sort
+Heap Sort
 */
 
 #include<bits/stdc++.h>
@@ -135,36 +136,67 @@ int median3(int a[], int l, int r)
 
 const int CUTOFF = 30;
 void quick_sort(int a[], int l, int r)
+{
+    if(l + CUTOFF <= r)
     {
-        if(l + CUTOFF <= r)
+        int pivot = median3(a, l, r);
+
+        int i = l, j = r - 1;
+
+        for( ; ; )
         {
-            int pivot = median3(a, l, r);
-
-            int i = l, j = r - 1;
-
-            for( ; ; )
-            {
-                while(a[++i] < pivot) { }
-                while(a[--j] > pivot) { }
-                if(i < j)
-                    swap(a[i], a[j]);
-                else
-                    break;
-            }
-
-            swap(a[i], a[r-1]);
-
-            quick_sort(a, l, i - 1);
-            quick_sort(a, i + 1, r);
+            while(a[++i] < pivot) { }
+            while(a[--j] > pivot) { }
+            if(i < j)
+                swap(a[i], a[j]);
+            else
+                break;
         }
-        else
-            insertion_sort(a, l, r);
+
+        swap(a[i], a[r-1]);
+
+        quick_sort(a, l, i - 1);
+        quick_sort(a, i + 1, r);
     }
+    else
+        insertion_sort(a, l, r);
+}
 
 
 void quick_sort(int a[], int n)
 {
     quick_sort(a, 0, n - 1);
+}
+
+int leftChild( int i )
+{
+    return 2 * i + 1;
+}
+
+void percDown(int a[], int i, int n)
+{
+    int child, tmp;
+
+    for(tmp = a[i]; leftChild(i) < n; i = child) {
+        child = leftChild(i);
+        if(child != n - 1 && a[child] < a[child+1])
+            child++;
+        if(tmp < a[child])
+            a[i] = a[child];
+        else
+            break;
+    }
+    a[i] = tmp;
+}
+
+void heap_sort(int a[], int n)
+{
+    for(int i = n / 2; i >= 0; i--)
+        percDown( a, i, n );
+    for(int i = n - 1; i > 0; i--) {
+        swap(a[0], a[i]);
+        percDown( a, 0, i );
+    }
 }
 
 void run(int n)
@@ -216,8 +248,17 @@ void run(int n)
     quick_sort(e, n);
     end = clock();
     tc = difftime(end, start);
-    fprintf(fp, " %dms\n", tc);
+    fprintf(fp, " %dms\t\t", tc);
     //print_array(e, n);
+
+    int f[n];
+    copy_array(arr, f, n);
+    start = clock();
+    heap_sort(f, n);
+    end = clock();
+    tc = difftime(end, start);
+    fprintf(fp, " %dms\n", tc);
+    //print_array(f, n);
 }
 
 int main()
@@ -228,7 +269,7 @@ int main()
         exit(0);
     }
 
-    fprintf(fp, "Size of the input\t\tBubble Sort\t Insertion Sort\t Selection Sort\t Merge Sort\t Quick Sort\n");
+    fprintf(fp, "Size of the input\t\tBubble Sort\t Insertion Sort\t Selection Sort\t Merge Sort\t Quick Sort\t Heap Sort\n");
 
     run(10);
     run(20);
